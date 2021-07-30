@@ -11,7 +11,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers');
 
-module.exports = configure((ctx) => ({
+module.exports = configure(ctx => ({
   // https://quasar.dev/quasar-cli/supporting-ts
   supportTS: {
     tsCheckerConfig: {
@@ -25,15 +25,10 @@ module.exports = configure((ctx) => ({
   // app boot file (/src/boot)
   // --> boot files are part of "main.js"
   // https://quasar.dev/quasar-cli/boot-files
-  boot: [
-
-    'axios',
-  ],
+  boot: ['axios'],
 
   // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
-  css: [
-    'app.scss',
-  ],
+  css: ['app.scss'],
 
   // https://github.com/quasarframework/quasar/tree/dev/extras
   extras: [
@@ -51,6 +46,9 @@ module.exports = configure((ctx) => ({
 
   // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
   build: {
+    env: {
+      API: 'https://us-central1-quasargram-8edba.cloudfunctions.net',
+    },
     vueRouterMode: 'hash', // available values: 'hash', 'history'
 
     // transpile: false,
@@ -109,12 +107,12 @@ module.exports = configure((ctx) => ({
     // directives: [],
 
     // Quasar plugins
-    plugins: [],
+    plugins: ['Dialog', 'Notify', 'Loading', 'LocalStorage'],
   },
 
   // animations: 'all', // --- includes all animations
   // https://quasar.dev/options/animations
-  animations: [],
+  animations: ['fadeIn', 'fadeOut'],
 
   // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
   ssr: {
@@ -123,16 +121,16 @@ module.exports = configure((ctx) => ({
 
   // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
   pwa: {
-    workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+    workboxPluginMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
     workboxOptions: {}, // only for GenerateSW
     manifest: {
       name: 'Quasargram',
       short_name: 'Quasargram',
-      description: 'A Quasar Framework app',
+      description: 'A simple Instagram Clone - Made with Quasar',
       display: 'standalone',
       orientation: 'portrait',
       background_color: '#ffffff',
-      theme_color: '#027be3',
+      theme_color: '#212121',
       icons: [
         {
           src: 'icons/icon-128x128.png',
@@ -179,13 +177,11 @@ module.exports = configure((ctx) => ({
 
     packager: {
       // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-
       // OS X / Mac App Store
       // appBundleId: '',
       // appCategoryType: '',
       // osxSign: '',
       // protocol: 'myapp://path',
-
       // Windows only
       // win32metadata: { ... }
     },

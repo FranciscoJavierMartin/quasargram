@@ -27,9 +27,54 @@
       </q-toolbar>
     </q-header>
 
-    <q-footer class="bg-white small-screen-only" bordered>
+    <q-footer class="bg-white " bordered>
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <div v-if="showAppInstallBanner" class=" banner-container bg-primary">
+          <div class="constrain">
+            <q-banner inline-actions dense class="bg-primary text-white">
+              <template v-slot:avatar>
+                <q-avatar
+                  color="white"
+                  text-color="grey-10"
+                  font-size="22px"
+                  icon="eva-camera-outline"
+                />
+              </template>
+              <b>Install Quasargram?</b>
+              <template v-slot:action>
+                <q-btn
+                  @click="installApp"
+                  dense
+                  class="q-px-sm"
+                  flat
+                  label="Yes"
+                />
+                <q-btn
+                  @click="hideAppInstallBanner"
+                  dense
+                  class="q-px-sm"
+                  flat
+                  label="Later"
+                />
+                <q-btn
+                  @click="neverShowAppInstallBanner"
+                  dense
+                  class="q-px-sm"
+                  flat
+                  label="Never"
+                />
+              </template>
+            </q-banner>
+          </div>
+        </div>
+      </transition>
+
       <q-tabs
-        class="text-grey-10"
+        class="text-grey-10 small-screen-only"
         active-color="primary"
         indicator-color="transparent"
       >
@@ -47,11 +92,53 @@
 <script lang="ts">
 import Vue from 'vue';
 
+let deferredPrompt: any;
+
 export default Vue.extend({
   name: 'MainLayout',
   data() {
-    return {};
-  }
+    return {
+      showAppInstallBanner: true,
+    };
+  },
+  methods: {
+    installApp() {
+      this.showAppInstallBanner = false;
+
+      deferredPrompt.prompt();
+
+      deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          this.neverShowAppInstallBanner();
+        } else {
+        }
+      });
+    },
+    neverShowAppInstallBanner() {
+      this.showAppInstallBanner = false;
+      this.$q.localStorage.set('neverShowAppInstallBanner', true);
+    },
+    hideAppInstallBanner() {
+      this.showAppInstallBanner = false;
+    },
+  },
+  mounted() {
+    let neverShowAppInstallBanner = this.$q.localStorage.getItem(
+      'neverShowAppInstallBanner',
+    );
+
+    if (!neverShowAppInstallBanner) {
+      window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+
+        deferredPrompt = e;
+
+        setTimeout(() => {
+          this.showAppInstallBanner = true;
+        }, 3000);
+      });
+    }
+  },
 });
 </script>
 
